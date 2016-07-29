@@ -1,0 +1,48 @@
+{% extends 'administrator.html' %}
+{% load staticfiles %}
+
+{% block title_tab %}.::Horario Semanal::.{% endblock %}
+
+{% block style_css %}
+<link rel="stylesheet" href="{% static 'css/morris.css' %}">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+{% endblock %}
+
+{% block script %}
+<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="{% static 'js/morris.min.js' %}"></script>
+<script>
+  $(document).ready(function(){
+    Morris.Area({
+      element: 'area-example',
+      data: [
+        { y: '2012', a: 20, b: 90 },
+        { y: '2013', a: 25,  b: 125 },
+        { y: '2014', a: 22,  b: 140 },
+        { y: '2015', a: 29,  b: 164 },
+      ],
+      xkey: 'y',
+      ykeys: ['a', 'b'],
+      labels: ['Buses', 'Kilometros']
+    });
+
+  });
+</script>
+{% endblock %}
+
+{% block wrapper %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-10 center">
+      <h1>Reporte</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10">
+      <div id="area-example"></div>
+    </div>
+  </div>
+</div>
+{%endblock %}

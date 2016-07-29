@@ -1,0 +1,88 @@
+{% extends 'administrator.html' %}
+{% load staticfiles %}
+
+{% block title_tab %}.::Horario Semanal::.{% endblock %}
+
+{% block style_css %}
+
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'css/horario.css' %}">
+<link rel="stylesheet" href="{% static 'css/table.css' %}">
+{% endblock %}
+
+{% block script %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function(){
+    var buses = [];
+    var rutas = [];
+    var bustas = [];
+    {% for ruta in rutas %}
+      rutas.push("{{ruta.nombre}}")
+    {% endfor %}
+    $.get( "/api/horario/?format=json", function( data ) {
+      $(data).each(function(){
+        var horario = $(this)[0];
+        var id = horario.id;
+        var fecha = horario.fecha;
+        var ruta = horario.ruta;
+        var bus = horario.bus;
+        buses.push({'ruta':ruta.nombre,'bus':bus.nDisco + ruta.nombre});
+      });
+      var temp = [];
+      for(i = 0;i< rutas.length; i++){
+        for(j = 0;j<buses.length; j++){
+          if (String(rutas[i]) == String(buses[j].ruta)){
+            temp.push(buses[j].bus);
+          }
+        }
+        bustas.push({'ruta':rutas[i],'buses':temp});
+        temp = [];
+      }
+      var tbody = $('tbody');
+      var html = '';
+      cont = 0;
+      for(i=0; i< rutas.length; i++){
+        html = html + '<tr>';
+        for(j = 0; j<bustas.length; j++){
+          if(bustas[j].buses[i]!=null){
+            html = html + '<td>';
+            html = html + bustas[j].buses[i]
+            html = html + '</td>'
+            cont ++;
+          }else{
+            html = html + '<td></td>'
+          }
+        }
+        html = html +'</tr>'
+        if(cont >0)
+          tbody.append(html);
+        cont = 0;
+        html = '';
+      }
+    });
+  });
+</script>
+{% endblock %}
+
+{% block wrapper %}
+<div class="table-responsive">
+  <center>
+    <h1>Planificador Semanal<br>{{inicio_semana}} -- {{final_semana}}</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          {%for r in rutas %}
+          <th>{{r.nombre}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </center>
+</div>
+
+{%endblock %}

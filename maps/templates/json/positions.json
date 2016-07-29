@@ -1,0 +1,12 @@
+{% spaceless %}
+[
+  {% for bp in posicionbus_ruta %}
+      {
+          "ndisco": "{{ bp.bus.nDisco }}",
+          "fecha":"{{ bp.fecha }}",
+          "lat":"{{ bp.latitud }}",
+          "lon":"{{ bp.longitud }}"
+      }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+]
+{% endspaceless %}

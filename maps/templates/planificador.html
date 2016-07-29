@@ -1,0 +1,150 @@
+{% extends 'administrator.html' %}
+{% load staticfiles %}
+
+{% block title_tab %}.::Horario Semanal::.{% endblock %}
+
+{% block style_css %}
+
+<link rel="stylesheet" href="{% static 'css/horario.css' %}" type="text/css" media="screen"/>
+
+{% endblock %}
+
+{% block script %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="{% static 'js/redips-drag-min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script>
+
+//Get element value and post
+$(document).ready(function(){
+  $('#save').click(function(){
+    var rutas = [];
+    {% for ruta in rutas %}
+    rutas.push("{{ ruta.id }}")
+    {% endfor %}
+    //get rutas
+    for (ruta in rutas){
+      var conductor;
+      var bus;
+      $('td[data-ruta="'+ruta+'"]').each(function(data){
+        var bus = null;
+        var conductor = null;
+        $(this).children().each(function(data){
+          if($(this).data('item')=='bus'){
+            bus = $(this).data('bus');
+          }else if ($(this).data('item')=='conductor'){
+            conductor = $(this).data('conductor');
+          }
+        });
+        if(bus != null && conductor !=null){
+          $.post('/horario/',{
+            'ruta':ruta,
+            'bus':bus,
+            'conductor':conductor,
+            'csrfmiddlewaretoken' : $('input[name="csrfmiddlewaretoken"]').val()
+          }).done(function( data ) {
+            swal('¡Enhorabuena!',   '¡Se han guardado los cambios!',   'success' )
+          });
+        }
+      });
+    }
+  });
+});
+</script>
+
+{% endblock %}
+
+{% block wrapper %}
+{% csrf_token %}
+<center>
+  <!-- tables inside this DIV could contain drag-able content  -->
+  <div id="redips-drag">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="col-md-2">
+          <table>
+            <colgroup>
+              <col width="100"/>
+              <col width="20"/>
+            </colgroup>
+            <tbody>
+              <tr>
+                <th colspan="1" class="redips-mark">Conductor</th>
+              </tr>
+              {% for conductor in conductores %}
+              <tr class="rd">
+                <td><div data-item="conductor" data-conductor="{{ conductor.id }}" class="redips-drag orange" style=" word-wrap: break-word;">{{ conductor.nombre }}</div></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table class="tbl1">
+                  <colgroup>
+                    <col width="30"/>
+                    <col width="100"/>
+                    <col width="100"/>
+                    <col width="100"/>
+                    <col width="100"/>
+                    <col width="100"/>
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <th colspan="12" class="redips-mark">Horario</th>
+                    </tr>
+                    <tr class="rl">
+                      <td class="redips-rowhandler"><div class="redips-drag redips-row"></div></td>
+                      {% for ruta in rutas %}
+                      <td class = "redips-mark" > {{ ruta.nombre }}</td>
+                      {% endfor %}
+                    </tr>
+                    {% for r in "xxxxxx" %}
+                    <tr class="{% if forloop.counter|divisibleby:2 %}rl{% else %}rd {% endif %}">
+                      <td class="redips-rowhandler"><div class="redips-drag redips-row"  style=" word-wrap: break-word;"></div></td>
+                      {% for ruta in rutas %}
+                      <td data-item="ruta" data-ruta="{{ ruta.id }}"></td>
+                      {% endfor %}
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <!--Button for send-->
+              <button type="button" id="save" class="btn btn-success">Guardar</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <table>
+            <colgroup>
+              <col width="100"/>
+             <col width="50"/>
+            </colgroup>
+            <tbody>
+              <tr>
+                <th colspan="1" class="redips-mark">Bus</th>
+              </tr>
+              {% for bus in buses %}
+              <tr class="rd">
+                <td><div data-item="bus" data-bus="{{ bus.id }}" class="redips-drag blue"  style=" word-wrap: break-word;">{{ bus.nDisco }}</div></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</center>
+{% endblock %}

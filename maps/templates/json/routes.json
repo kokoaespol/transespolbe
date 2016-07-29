@@ -1,0 +1,11 @@
+{% spaceless %}
+{  "results":
+  [
+    {% for r in routes %}
+    {
+      "nombre": "{{r.nombre}}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+{% endspaceless %}

@@ -1,0 +1,99 @@
+# -*- coding: utf-8 -*-
+from django.db import models
+from django.contrib.auth.models import User
+from django.http import HttpResponseForbidden, HttpResponse
+
+#from django.core.mail import send_mail
+# Create your models here.
+
+class PosicionUsuario(models.Model):
+    username = models.ForeignKey(User)
+    latitud = models.FloatField()
+    longitud = models.FloatField()
+    
+    def __unicode__(self):
+        return unicode(self.username)
+
+    class Meta:
+        verbose_name = "Posicion Usuario"
+        verbose_name_plural = "Posiciones Usuarios"
+
+class Ruta(models.Model):
+    nombre = models.CharField(max_length=100)
+    
+    def __unicode__(self):
+        return unicode(self.nombre)
+
+    class Meta:
+        verbose_name = "Ruta"
+        verbose_name_plural= "Rutas"
+   
+class Horario(models.Model):
+    hora = models.TimeField()
+    fecha = models.DateTimeField()
+
+    def __unicode__(self):
+        return unicode(str(self.fecha) + '  ' + str(self.hora))
+
+    class Meta:
+        verbose_name = "Horario"
+        verbose_name_plural= "Horarios"
+
+class Conductor(models.Model):
+    nombre = models.TextField(max_length=100)
+    cedula = models.TextField(max_length=10)
+
+    def __unicode__(self):
+        return unicode(self.nombre)
+
+    class Meta:
+        verbose_name = "Conductor"
+        verbose_name_plural = "Conductores"
+
+
+class Bus(models.Model):
+    nDisco = models.FieldField(max_length=10)
+    conductor = models.ForeignKey(Conductor,related_name='Bus')
+    tipo = models.TextField(max_length=10,blank=True , null = True)
+    marca = models.TextField(max_length=25,blank=True , null = True)
+    placa = models.TextField(max_length = 15,blank=True , null = True)
+    modelo = models.TextField(max_length = 30,blank=True , null = True)
+    cSentados = models.IntegerField(max_length = 2,blank=True , null = True)
+    cParados = models.IntegerField(max_length = 2,blank=True , null = True)
+    horario = models.ForeignKey(Horario)
+    ruta = models.ForeignKey(Ruta)
+
+    def __unicode__(self):
+        return unicode(self.nDisco)
+
+    class Meta:
+        verbose_name = "Bus"
+        verbose_name_plural = "Buses"
+    
+
+class PosicionBus(models.Model):
+    bus = models.ForeignKey(Bus, related_name = 'PosicionBus')
+    fecha = models.DateTimeField()
+    latitud = models.FloatField()
+    longitud = models.FloatField()
+
+    def __unicode__(self):
+        return unicode(self.bus)
+
+    class Meta:
+        verbose_name = "Posicion Bus"
+        verbose_name_plural = "Posiciones Buses"
+
+class ObjetoPerdido(models.Model):
+    username = models.ForeignKey(User, related_name = 'ObjetoPerdido')
+    fecha = models.DateTimeField(auto_now_add=True)
+    descripcion = models.TextField(max_length=200)
+    
+
+    def __unicode__(self):
+        return unicode(self.username)
+
+    class Meta:
+        verbose_name = "Objeto Perdido"
+        verbose_name_plural= "Objetos Perdidos"
+

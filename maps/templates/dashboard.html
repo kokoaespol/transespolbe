@@ -1,0 +1,161 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Sortable - Handle empty lists</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <style>
+  #sortable1, #sortable2, #sortable3 { list-style-type: none; margin: 0; float: left; margin-right: 10px; background: #eee; padding: 5px; width: 100%;}
+  #sortable1 li, #sortable2 li, #sortable3 li { margin: 5px; padding: 5px; font-size: 1.2em; width100%; }
+  </style>
+  <script>
+  $(function() {
+    $( "ul.droptrue" ).sortable({
+      connectWith: "ul",
+    });
+
+    $( "ul.dropfalse" ).sortable({
+      connectWith: "ul",
+      dropOnEmpty: false
+    });
+
+    //$( "#sortable1, #sortable2, #sortable3" ).disableSelection();
+    $('#vaciar').click(function(){
+      $('#sortable3').empty();
+      $('#sortable3').html('<h4>Inserte Aqu&iacute</h4>');
+    });
+
+    $('.nav-tabs li').click(function(){
+
+    });
+    $('#home').click(function(){
+      var rowhome = $('#rowhome');
+      var rowactual = $('#rowactual');
+      var visible = rowhome.css('display');
+      if(visible=='none'){
+        rowactual.css('display','none');
+        rowhome.css('display','block');
+      }else{
+        rowhome.css('display','none');
+        rowactual.css('display','block');
+      }
+    });
+   $('#actual').click(function(){
+      var rowhome = $('#rowactual');
+      var rowactual = $('#rowhome');
+      var visible = rowhome.css('display');
+      if(visible=='none'){
+        rowactual.css('display','none');
+        rowhome.css('display','block');
+      }else{
+        rowhome.css('display','none');
+        rowactual.css('display','block');
+      }
+    });
+
+  });
+  </script>
+</head>
+<body>
+
+<div class="container">
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <div class="page-header">
+        <h1>
+          Planificaci&oacuten <small>Rutas, buses y conductores por semana</small>
+        </h1>
+      </div>
+      <ul class="nav nav-tabs">
+        <li class="active" id="home">
+          <a href="#">Home</a>
+        </li>
+        <li id="actual" >
+          <a href="#">Profile</a>
+        </li>
+        <li class="dropdown pull-right" style="display:none">
+           <a href="#" data-toggle="dropdown" class="dropdown-toggle">Dropdown<strong class="caret"></strong></a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#">Action</a>
+            </li>
+            <li>
+              <a href="#">Another action</a>
+            </li>
+            <li>
+              <a href="#">Something else here</a>
+            </li>
+            <li class="divider">
+            </li>
+            <li>
+              <a href="#">Separated link</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div id="rowhome" class="row-fluid">
+    <div class="col-md-3">
+      <ul id="sortable1" class="droptrue">
+        {% for bus in buses %}
+        <li class="ui-state-default" data-bus="{{bus.id}}">{{bus.nDisco}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-3">
+      <ul id="sortable2" class="droptrue">
+        {% for ruta in rutas %}
+        <li class="ui-state-default" data-ruta="{{ruta.id}}">{{ruta.nombre}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-3">
+      <ul id="sortable2" class="droptrue">
+        {% for conductor in conductores %}
+        <li class="ui-state-default" data-ruta="{{conductor.id}}">{{conductor.nombre}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-3">
+      <ul id="sortable3" class="droptrue">
+        <h4>Inserte Aqu&iacute</h4>
+      </ul>
+      <br/>
+      <div class="row-fluid">
+        <div class="col-md-12">
+          <button id="guardar" type="button" class="btn btn-primary">Guardar</button>
+          <button id="vaciar" type="button" class="btn btn-primary">Vaciar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="rowactual" style="display:none;" class="row-fluid">
+    <div class="col-md-3">
+      <ul id="sortable3" class="droptrue">
+
+      </ul>
+      <br/>
+      <div class="row-fluid">
+        <div class="col-md-12">
+          <button id="guardar" type="button" class="btn btn-primary">Guardar</button>
+          <button id="vaciar" type="button" class="btn btn-primary">Vaciar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br style="clear:both">
+
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+
+<!--
+  Author: W3layouts
+  Author URL: http://w3layouts.com
+  License: Creative Commons Attribution 3.0 Unported
+  License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+  <head>
+    <title>:::Login:::</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <meta name="keywords" content="Login" />
+    <link href="{% static 'css/style_login.css' %}" rel='stylesheet' type='text/css' />
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/sweetalert-dev.js' %}"></script>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/sweetalert.css' %}">
+    <!--web-fonts-->
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <!--/web-fonts-->
+    <script>
+$(document).ready(function(){
+  {% if error %}
+  swal("):", "{{error}}" , "error");
+  {% else %}
+  $('#send').click(function(){
+    $.post('login_web/',{
+      'user':$('input[name="user"]').val(),
+      'pwd':$('input[name="pwd"]').val(),
+      'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+    }).done(function(data){
+      swal({
+        title: "Auto close alert!",
+        text: "I will close in 2 seconds.",
+        type: "success",
+        timer: 2000,
+        showConfirmButton: false
+      });
+      window.location.replace('/');
+    }).fail(function(data){
+      console.log(data);
+    });
+  });
+  {% endif %}
+});
+    </script>
+
+  </head>
+  <body>
+    <!--User-Login-->
+    <h1>Iniciar Sesi&oacuten</h1>
+    <div class="avtar">
+      <img src="{% static 'img/avtar.png' %}" height="200" >
+    </div>
+    <div class="login-form">
+      <div class="form-text">
+        {% csrf_token %}
+        <input type="text" class="text" name="user" value="Usuario" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Usuario';}" >
+        <input type="password" value="Password" name="pwd" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}">
+      </div>
+        <input type="submit" value="GO" id="send" >
+    </div>
+    <!--/User-Login-->
+    <!--start-copyright-->
+    <div class="copy-right">
+      <p>Template by <a href="http://w3layouts.com">w3layouts</a></p>
+    </div>
+    <!--//end-copyright-->
+  </body>
+</html>
